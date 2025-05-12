@@ -1,0 +1,27 @@
+name: Generate and Release Ergogen Files
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  generate:
+    runs-on: ubuntu-24.04
+    steps:
+      -
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version-file: ".tool-versions"
+          cache: "npm"
+
+      - name: Install Ergogen
+        run: npm install -g ergogen
+
+      - name: Generate files
+        run: ergogen ./ergogen/config.yaml -o output
+
+      - name: Release
+        uses: softprops/action-gh-release@v2
